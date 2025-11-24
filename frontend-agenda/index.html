@@ -23,8 +23,8 @@
         <h1>Agenda de Contactos (Cliente Web)</h1>
 
         <div id="seccion-login">
-            <h2>Iniciar Sesión</h2>
-            <p>Ingresa tus credenciales para obtener el Token JWT.</p>
+            <h2>Inicio de Sesion</h2>
+            <p>Ingresa tus credenciales.  autenticacion por jwt</p>
             <input type="text" id="usuario" placeholder="Usuario">
             <input type="password" id="password" placeholder="Contraseña">
             <button onclick="login()">Ingresar</button>
@@ -34,26 +34,26 @@
         <div id="seccion-app" class="oculto">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2>Mis Contactos</h2>
-                <button onclick="logout()" class="logout" style="width: auto;">Cerrar Sesión</button>
+                <button onclick="logout()" class="logout" style="width: auto;">Cerrar Sesion</button>
             </div>
             
             <div id="formulario-crear">
-                <h3>Agregar Nuevo</h3>
-                <input type="text" id="nombre" placeholder="Nombre completo (Requerido)">
-                <input type="text" id="telefono" placeholder="Teléfono (Requerido)">
-                <input type="email" id="email" placeholder="Correo electrónico">
-                <textarea id="direccion" placeholder="Dirección física" rows="2"></textarea>
-                <button onclick="crearContacto()">Guardar</button>
+                <h3>Agregar Nuevo Contacto</h3>
+                <input type="text" id="nombre" placeholder="Nombre completo ">
+                <input type="text" id="telefono" placeholder="Teléfono">
+                <input type="email" id="email" placeholder="Correo electronico">
+                <textarea id="direccion" placeholder="Dirección / nota" rows="2"></textarea>
+                <button onclick="crearContacto()">Guardar contacto</button>
                 <div id="mensaje-form" class="error"></div>
             </div>
 
             <hr>
-            <div id="lista-contactos">Cargando...</div>
+            <div id="lista-contactos">CARGANDO</div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://127.0.0.1:8000/api';
+        const API_URL = 'https://agendacontactosev3.onrender.com/api';
         
         let token = localStorage.getItem('access_token');
 
