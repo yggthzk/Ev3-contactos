@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Premium Gold</title>
+    <title>Agenda de contactos</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -347,7 +347,7 @@
                 titulo.style.color = 'var(--guest-color)';
             } else {
                 btnCrear.classList.remove('oculto');
-                titulo.innerText = 'V.I.P.';
+                titulo.innerText = '.';
                 titulo.style.color = 'var(--primary-color)';
             }
 
@@ -396,7 +396,7 @@
                 if (modoInvitado) {
                     div.innerHTML = `
                         <h3 style="color:var(--text-primary); font-size:1.2rem; margin-bottom:0">${c.nombre}</h3>
-                        <p style="color:#555; font-style:italic; font-size:0.9rem">Informacion protegida</p>
+                        <p style="color:#555; font-style:italic; font-size:0.9rem">Autenticate Xodoo</p>
                     `;
                 } else {
                     div.innerHTML = `
