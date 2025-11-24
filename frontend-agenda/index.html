@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cliente Independiente - Agenda EV3</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background-color: #f4f4f9; }
+        .contenedor { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .oculto { display: none; }
+        .error { color: #d32f2f; margin-top: 10px; font-weight: bold; }
+        input, button, textarea { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+        button.logout { background-color: #dc3545; }
+        button.logout:hover { background-color: #c82333; }
+        .tarjeta { border-left: 5px solid #007bff; background: #fff; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h1>Agenda de Contactos (Cliente Web)</h1>
+
+        <div id="seccion-login">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales para obtener el Token JWT.</p>
+            <input type="text" id="usuario" placeholder="Usuario">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="login()">Ingresar</button>
+            <div id="mensaje-login" class="error"></div>
+        </div>
+
+        <div id="seccion-app" class="oculto">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Mis Contactos</h2>
+                <button onclick="logout()" class="logout" style="width: auto;">Cerrar Sesión</button>
+            </div>
+            
+            <div id="formulario-crear">
+                <h3>Agregar Nuevo</h3>
+                <input type="text" id="nombre" placeholder="Nombre completo (Requerido)">
+                <input type="text" id="telefono" placeholder="Teléfono (Requerido)">
+                <input type="email" id="email" placeholder="Correo electrónico">
+                <textarea id="direccion" placeholder="Dirección física" rows="2"></textarea>
+                <button onclick="crearContacto()">Guardar</button>
+                <div id="mensaje-form" class="error"></div>
+            </div>
+
+            <hr>
+            <div id="lista-contactos">Cargando...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        
+        let token = localStorage.getItem('access_token');
+
+        if (token) {
+            mostrarApp();
+        }
+
+        async function login() {
+            const usuario = document.getElementById('usuario').value;
+            const password = document.getElementById('password').value;
+            const mensaje = document.getElementById('mensaje-login');
+            mensaje.innerText = '';
+
+            try {
+                const respuesta = await fetch(`${API_URL}/token/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usuario, password: password })
+                });
+
+                if (respuesta.ok) {
+                    const datos = await respuesta.json();
+                    token = datos.access; 
+                    localStorage.setItem('access_token', token);
+                    mostrarApp();
+                } else {
+                    mensaje.innerText = 'Credenciales incorrectas.';
+                }
+            } catch (error) {
+                mensaje.innerText = 'Error al conectar con la API.';
+            }
+        }
+
+        function logout() {
+            token = null;
+            localStorage.removeItem('access_token');
+            document.getElementById('seccion-app').classList.add('oculto');
+            document.getElementById('seccion-login').classList.remove('oculto');
+            document.getElementById('usuario').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function mostrarApp() {
+            document.getElementById('seccion-login').classList.add('oculto');
+            document.getElementById('seccion-app').classList.remove('oculto');
+            cargarContactos();
+        }
+
+        async function cargarContactos() {
+            const lista = document.getElementById('lista-contactos');
+            
+            try {
+                const respuesta = await fetch(`${API_URL}/contactos/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const contactos = await respuesta.json();
+                    lista.innerHTML = '';
+                    contactos.forEach(c => {
+                        lista.innerHTML += `
+                            <div class="tarjeta">
+                                <strong>${c.nombre}</strong> <small>(${c.fecha_creacion || 'Reciente'})</small><br>
+                                📞 ${c.telefono}<br>
+                                ✉️ ${c.email || '-'}<br>
+                                📍 ${c.direccion || '-'}
+                            </div>
+                        `;
+                    });
+                } else {
+                    if (respuesta.status === 401) {
+                        logout();
+                    } else {
+                        lista.innerText = 'Error al cargar datos.';
+                    }
+                }
+            } catch (error) {
+                lista.innerText = 'No se pudo conectar con el servidor.';
+            }
+        }
+
+        async function crearContacto() {
+            const nombre = document.getElementById('nombre').value;
+            const telefono = document.getElementById('telefono').value;
+            const email = document.getElementById('email').value;
+            const direccion = document.getElementById('direccion').value;
+            const mensaje = document.getElementById('mensaje-form');
+            mensaje.innerText = '';
+
+            if(!nombre || !telefono) {
+                mensaje.innerText = 'Nombre y Teléfono son obligatorios.';
+                return;
+            }
+
+            try {
+                const respuesta = await fetch(`${API_URL}/contactos/`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, telefono, email, direccion })
+                });
+
+                if (respuesta.ok) {
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('telefono').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('direccion').value = '';
+                    cargarContactos();
+                } else {
+                    mensaje.innerText = 'Error al guardar el contacto.';
+                }
+            } catch (error) {
+                mensaje.innerText = 'Error de conexión.';
+            }
+        }
+    </script>
+</body>
+</html>
