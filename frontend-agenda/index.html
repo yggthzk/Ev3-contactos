@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de contactos</title>
+    <title>Agenda de Contactos</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -38,9 +38,7 @@
             padding: 20px;
         }
 
-        .oculto {
-            display: none !important;
-        }
+        .oculto { display: none !important; }
 
         .card {
             background-color: var(--surface-color);
@@ -73,9 +71,7 @@
             transition: border-color 0.3s;
         }
 
-        input::placeholder, textarea::placeholder {
-            color: #555;
-        }
+        input::placeholder { color: #555; }
 
         input:focus, textarea:focus {
             outline: none;
@@ -94,26 +90,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
             letter-spacing: 1px;
+            margin-top: 10px;
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             color: #fff;
-            box-shadow: 0 4px 6px rgba(74, 20, 140, 0.3);
         }
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            box-shadow: 0 6px 8px rgba(74, 20, 140, 0.5);
-        }
+        .btn-primary:hover { background-color: var(--primary-hover); }
 
         .btn-accent {
             background-color: var(--accent-color);
             color: #000;
             font-weight: 900;
         }
-        .btn-accent:hover {
-            background-color: var(--accent-hover);
-        }
+        .btn-accent:hover { background-color: var(--accent-hover); }
 
         .btn-danger {
             background-color: transparent;
@@ -130,11 +121,8 @@
         .btn-guest {
             background-color: var(--guest-color);
             color: #fff;
-            margin-top: 15px;
         }
-        .btn-guest:hover {
-            background-color: var(--guest-hover);
-        }
+        .btn-guest:hover { background-color: var(--guest-hover); }
 
         .nav-bar {
             display: flex;
@@ -225,14 +213,15 @@
 
     <div id="vista-login" class="contenedor">
         <div class="card" style="max-width: 400px; margin: 100px auto; text-align: center;">
-            <h1 style="font-size: 2rem; margin-bottom: 10px;">Acceso Seguro</h1>
-            <p style="margin-bottom: 30px;">Identificate para gestionar la agenda</p>
+            <h1 style="font-size: 2rem; margin-bottom: 10px;">Agenda de Contactos</h1>
+            <h2 style="margin-bottom: 10px;">Inicio de Sesion</h2>
+            <p style="margin-bottom: 30px;">Ingresa tus credenciales. autenticacion por jwt</p>
             
             <div id="login-error" class="error-msg"></div>
             
             <input type="text" id="username" placeholder="Usuario">
             <input type="password" id="password" placeholder="Contrasena">
-            <button class="btn-primary" onclick="login()">INICIAR SESION</button>
+            <button class="btn-primary" onclick="login()">Ingresar</button>
             
             <button class="btn-guest" onclick="entrarInvitado()">MODO INVITADO</button>
         </div>
@@ -240,15 +229,15 @@
 
     <div id="vista-app" class="contenedor oculto">
         <div class="nav-bar">
-            <h2 style="margin:0; font-size: 1.5rem;">Agenda <span id="titulo-app" style="color:var(--primary-color)">CONTACTOS</span></h2>
-            <button class="btn-danger" style="width: auto; font-size: 0.8rem;" onclick="logout()">SALIR</button>
+            <h2 style="margin:0; font-size: 1.5rem;">Mis Contactos <span id="titulo-app" style="color:var(--primary-color)"></span></h2>
+            <button class="btn-danger" style="width: auto; font-size: 0.8rem;" onclick="logout()">Cerrar Sesion</button>
         </div>
 
         <div id="barra-acciones" style="display: flex; gap: 10px; margin-bottom: 20px;">
             <div class="search-bar" style="flex-grow: 1;">
                 <input type="text" id="buscador" placeholder="Buscar contacto..." onkeyup="filtrarContactos()">
             </div>
-            <button id="btn-crear" class="btn-accent" style="width: auto; height: 45px;" onclick="abrirModal()">nuevo contacto</button>
+            <button id="btn-crear" class="btn-accent" style="width: auto; height: 45px;" onclick="abrirModal()">Agregar Nuevo Contacto</button>
         </div>
 
         <div id="lista-contactos" class="grid-contactos">
@@ -258,23 +247,22 @@
     <div id="modal-form" class="modal-overlay oculto">
         <div class="modal-content">
             <span class="close-btn" onclick="cerrarModal()">&times;</span>
-            <h3 id="modal-titulo" style="text-align: center; margin-bottom: 20px;">Nuevo Contacto</h3>
+            <h3 id="modal-titulo" style="text-align: center; margin-bottom: 20px;">Agregar Nuevo Contacto</h3>
             
             <div id="form-error" class="error-msg"></div>
             
             <input type="hidden" id="contacto-id">
-            <input type="text" id="nombre" placeholder="Nombre completo">
+            <input type="text" id="nombre" placeholder="Nombre completo ">
             <input type="text" id="telefono" placeholder="Telefono">
             <input type="email" id="email" placeholder="Correo electronico">
-            <textarea id="direccion" rows="3" placeholder="Direccion fisica"></textarea>
+            <textarea id="direccion" rows="3" placeholder="Direccion / nota"></textarea>
             
-            <button class="btn-primary" onclick="guardarContacto()">GUARDAR contacto</button>
+            <button class="btn-primary" onclick="guardarContacto()">Guardar contacto</button>
         </div>
-    </div> 
-
+    </div>
 
     <script>
-        const API_URL = 'https://agendacontactosev3.onrender.com/api';//mi api de render 
+        const API_URL = 'https://agendacontactosev3.onrender.com/api';
         let token = localStorage.getItem('jwt_token');
         let todosLosContactos = [];
         let modoInvitado = false;
@@ -289,11 +277,11 @@
             const err = document.getElementById('login-error');
             
             if(!u || !p) {
-                err.innerText = 'Por favor completa todos los campos.';
+                err.innerText = 'Completa todos los campos.';
                 return;
             }
 
-            err.innerText = 'Verificando credenciales...';
+            err.innerText = 'Conectando...';
 
             try {
                 const res = await fetch(`${API_URL}/token/`, {
@@ -310,10 +298,10 @@
                     modoInvitado = false;
                     mostrarApp();
                 } else {
-                    err.innerText = 'Acceso denegado. Revisa tus datos.';
+                    err.innerText = 'Credenciales incorrectas.';
                 }
             } catch (e) {
-                err.innerText = 'Error de conexion con el servidor.';
+                err.innerText = 'Error de conexion.';
             }
         }
 
@@ -343,11 +331,11 @@
 
             if(modoInvitado) {
                 btnCrear.classList.add('oculto');
-                titulo.innerText = 'INVITADO';
+                titulo.innerText = '(INVITADO)';
                 titulo.style.color = 'var(--guest-color)';
             } else {
                 btnCrear.classList.remove('oculto');
-                titulo.innerText = '.';
+                titulo.innerText = '';
                 titulo.style.color = 'var(--primary-color)';
             }
 
@@ -356,7 +344,7 @@
 
         async function cargarContactos() {
             const container = document.getElementById('lista-contactos');
-            container.innerHTML = '<p style="text-align:center; color:var(--accent-color)">Sincronizando con la nube...</p>';
+            container.innerHTML = '<p style="text-align:center; color:var(--accent-color)">CARGANDO</p>';
 
             const headers = {};
             if (!modoInvitado && token) {
@@ -373,10 +361,10 @@
                     renderizarLista(todosLosContactos);
                 } else {
                     if(res.status === 401 && !modoInvitado) logout();
-                    else container.innerHTML = '<p>Error al cargar datos. Posiblemente permiso denegado.</p>';
+                    else container.innerHTML = '<p>Error o permiso denegado.</p>';
                 }
             } catch (e) {
-                container.innerHTML = '<p>Sin conexion a la API.</p>';
+                container.innerHTML = '<p>Sin conexion.</p>';
             }
         }
 
@@ -385,7 +373,7 @@
             container.innerHTML = '';
 
             if(lista.length === 0) {
-                container.innerHTML = '<p style="text-align:center; width:100%; color:#555;">No se encontraron contactos.</p>';
+                container.innerHTML = '<p style="text-align:center; width:100%; color:#555;">Sin contactos.</p>';
                 return;
             }
 
@@ -396,7 +384,7 @@
                 if (modoInvitado) {
                     div.innerHTML = `
                         <h3 style="color:var(--text-primary); font-size:1.2rem; margin-bottom:0">${c.nombre}</h3>
-                        <p style="color:#555; font-style:italic; font-size:0.9rem">Autenticate Xodoo</p>
+                        <p style="color:#555; font-style:italic; font-size:0.9rem">Informacion protegida</p>
                     `;
                 } else {
                     div.innerHTML = `
@@ -405,8 +393,8 @@
                         <p><small>EMAIL:</small> ${c.email || '---'}</p>
                         <p><small>DIR:</small> ${c.direccion || '---'}</p>
                         <div style="margin-top:15px; display:flex; gap:10px; border-top:1px solid #333; padding-top:10px;">
-                            <button class="btn-primary" style="padding:8px; font-size:12px" onclick='editar(${JSON.stringify(c)})'>EDITAR</button>
-                            <button class="btn-danger" style="padding:8px; font-size:12px; margin:0" onclick="eliminar(${c.id})">BORRAR</button>
+                            <button class="btn-primary" style="padding:8px; font-size:12px" onclick='editar(${JSON.stringify(c)})'>Editar</button>
+                            <button class="btn-danger" style="padding:8px; font-size:12px; margin:0" onclick="eliminar(${c.id})">Eliminar</button>
                         </div>
                     `;
                 }
@@ -416,17 +404,15 @@
 
         function filtrarContactos() {
             const texto = document.getElementById('buscador').value.toLowerCase();
-            
             const filtrados = todosLosContactos.filter(c => 
                 c.nombre.toLowerCase().includes(texto) || 
                 c.telefono.includes(texto)
             );
-            
             renderizarLista(filtrados);
         }
 
         function abrirModal() {
-            document.getElementById('modal-titulo').innerText = 'NUEVO CONTACTO';
+            document.getElementById('modal-titulo').innerText = 'Agregar Nuevo Contacto';
             document.getElementById('contacto-id').value = '';
             document.getElementById('nombre').value = '';
             document.getElementById('telefono').value = '';
@@ -437,7 +423,7 @@
         }
 
         function editar(c) {
-            document.getElementById('modal-titulo').innerText = 'EDITAR CONTACTO';
+            document.getElementById('modal-titulo').innerText = 'Editar Contacto';
             document.getElementById('contacto-id').value = c.id;
             document.getElementById('nombre').value = c.nombre;
             document.getElementById('telefono').value = c.telefono;
@@ -449,9 +435,7 @@
 
         function cerrarModal() {
             document.getElementById('modal-form').classList.add('oculto');
-        }       
-
-        //manejo de exepciones y campos del formulario
+        }
 
         async function guardarContacto() {
             const id = document.getElementById('contacto-id').value;
@@ -462,7 +446,7 @@
             const err = document.getElementById('form-error');
 
             if(!nombre || !telefono) {
-                err.innerText = 'El Nombre y el Telefono son obligatorios.';
+                err.innerText = 'Nombre y Telefono requeridos.';
                 return;
             }
 
@@ -472,14 +456,12 @@
             );
 
             if (duplicado) {
-                err.innerText = 'Error: Ya existe un contacto con ese Nombre o Telefono.';
+                err.innerText = 'Error: Contacto duplicado.';
                 return;
             }
 
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/contactos/${id}/` : `${API_URL}/contactos/`;
-
-            err.innerText = 'Guardando...';
 
             try {
                 const res = await fetch(url, {
@@ -496,15 +478,15 @@
                     cargarContactos();
                     document.getElementById('buscador').value = '';
                 } else {
-                    err.innerText = 'se cayo el sistemaaa.';
+                    err.innerText = 'Error al guardar.';
                 }
             } catch (e) {
                 err.innerText = 'Error de conexion.';
             }
         }
-//da error aveces 
+
         async function eliminar(id) {
-            if(!confirm('?Estas seguro de eliminar permanentemente este contacto?')) return;
+            if(!confirm('?Eliminar contacto permanentemente?')) return;
 
             try {
                 const res = await fetch(`${API_URL}/contactos/${id}/`, {
@@ -515,7 +497,7 @@
                 if(res.ok) {
                     cargarContactos();
                 } else {
-                    alert('No se pudo eliminar el contacto.');
+                    alert('Error al eliminar.');
                 }
             } catch (e) {
                 alert('Error de conexion.');
