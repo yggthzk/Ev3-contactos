@@ -1,6 +1,6 @@
-django
+django==4.2.16
 djangorestframework
 django-cors-headers
 djangorestframework-simplejwt
 gunicorn
-whitenoise
+whitenoise==6.6.0
